@@ -26,6 +26,7 @@
  * Class Adyen_Payment_Helper_Payment_Data
  */
 class Adyen_Payment_Helper_Payment_Data extends Mage_Payment_Helper_Data {
+    private $_adyenPaymentMethods = null;
 
     /**
      * Retrieve method model object
@@ -126,12 +127,18 @@ class Adyen_Payment_Helper_Payment_Data extends Mage_Payment_Helper_Data {
 
     public function getPaymentMethods($store = null)
     {
+        if($this->_adyenPaymentMethods) {
+            return $this->_adyenPaymentMethods;
+        }
+
         $observer = new Adyen_Payment_Model_Observer();
         $billingAgreementObserver = new Adyen_Payment_Model_Billing_Agreement_Observer();
 
         $observer->addMethodsToConfig(null);
         $billingAgreementObserver->addMethodsToConfig(null);
 
-        return parent::getPaymentMethods($store);
+        $this->_adyenPaymentMethods = parent::getPaymentMethods($store);
+
+        return $this->_adyenPaymentMethods;
     }
 }
